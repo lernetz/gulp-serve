@@ -1,5 +1,5 @@
 {
-  "name": "lernetz-serve-gulp-task",
+  "name": "@lernetz/gulp-serve",
   "version": "0.0.2",
   "description": "A gulp task that starts docker containers with docker-compose including proper project-name and port listing",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/legoheld/lernetz-serve-gulp-task.git"
+    "url": "https://github.com/lernetz/gulp-serve.git"
   },
   "keywords": [
     "docker",
@@ -20,9 +20,9 @@
   "author": "Michael Heimann",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/legoheld/lernetz-serve-gulp-task/issues"
+    "url": "https://github.com/lernetz/gulp-serve/issues"
   },
-  "homepage": "https://github.com/legoheld/lernetz-serve-gulp-task",
+  "homepage": "https://github.com/lernetz/gulp-serve",
   "dependencies": {
     "gulp": "^4.0.0",
     "merge": "^1.2.0"
