@@ -6,11 +6,7 @@ const defaultOptions = {
     name: path.basename(process.cwd()),
 };
 
-function startServe(callback) {
-    startServe.with(defaultOptions)(callback);
-}
-
-startServe.with = function(options) {
+function serve(options = {}) {
     const project = { ...defaultOptions, ...options };
 
     return done => {
@@ -35,11 +31,7 @@ startServe.with = function(options) {
     };
 }
 
-function stopServe(callback) {
-    stopServe.with(defaultOptions)(callback);
-}
-
-stopServe.with = function(options) {
+function stopServe(options = {}) {
     const project = { ...defaultOptions, ...options };
 
     return done => {
@@ -50,6 +42,6 @@ stopServe.with = function(options) {
 }
 
 module.exports = {
-    startServe,
+    serve,
     stopServe,
 };

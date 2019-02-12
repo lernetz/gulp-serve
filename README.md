@@ -5,41 +5,41 @@ Gulp-compatible wrapper functions around `docker-compose` to start Docker contai
 
 ## Usage
 
-The following example demonstrates how to use the `startServe` and `stopServe` functions.
+This package exports two asynchronous functions `serve` and `stopServe`. Because they follow the error-first callback pattern, they can be used with Gulp as follows:
 
 ```javascript
 // In your Gulpfile:
 
 // Using classic Gulp syntax:
 const gulp = require('gulp');
-const {startServe, stopServe} = require('@lernetz/gulp-serve');
-gulp.task('serve:start', startServe);
-gulp.task('serve:stop', stopServe);
+const {serve, stopServe} = require('@lernetz/gulp-serve');
+gulp.task('serve', serve());
+gulp.task('serve:stop', stopServe());
 
 // Or, using the newer Gulp 4 syntax:
-const {startServe, stopServe} = require('@lernetz/gulp-serve');
+const {serve, stopServe} = require('@lernetz/gulp-serve');
 module.exports = {
-    'serve:start': startServe,
-    'serve:stop': stopServe,
+    'serve': serve(),
+    'serve:stop': stopServe(),
 };
 ```
 
 Then run the defined tasks from the command line:
 
 ```shell
-npx gulp serve:start
+npx gulp serve
 npx gulp serve:stop
 ```
 
 
 ## Options
 
-The two functions can be configured to use non-default options via `.with(options)`:
+The two functions can be configured to use non-default options via an `options` argument:
 
 ```javascript
 module.exports = {
-    'serve:start': startServe.with(options),
-    'serve:stop': stopServe.with(options),
+    'serve': serve(options),
+    'serve:stop': stopServe(options),
 };
 ```
 
