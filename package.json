@@ -1,6 +1,6 @@
 {
   "name": "@lernetz/gulp-serve",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Gulp-compatible wrapper functions around `docker-compose` to start Docker containers with proper project name and port listing.",
   "main": "index.js",
   "repository": {
