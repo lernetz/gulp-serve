@@ -1,34 +1,50 @@
-# lernetz-serve-gulp-task
-A gulp task that starts/stops docker containers with docker-compose. It executes docker-compose up/down command within a folder. Means that docker-compose must be installed on the system.
+# @lernetz/gulp-serve
+
+Gulp-compatible wrapper functions around `docker-compose` to start Docker containers with proper project name and port listing.
+
 
 ## Usage
-The following example will show how to use the serve task.
-Simply require the task and you have the gulp tasks ready. 
+
+The following example demonstrates how to use the `startServe` and `stopServe` functions.
 
 ```javascript
-var gulp = require('gulp');
-var serve = require( 'lernetz-serve-gulp-task' );
+// In your Gulpfile:
+
+// Using classic Gulp syntax:
+const gulp = require('gulp');
+const {startServe, stopServe} = require('@lernetz/gulp-serve');
+gulp.task('serve:start', startServe);
+gulp.task('serve:stop', stopServe);
+
+// Or, using the newer Gulp 4 syntax:
+const {startServe, stopServe} = require('@lernetz/gulp-serve');
+module.exports = {
+    'serve:start': startServe,
+    'serve:stop': stopServe,
+};
 ```
 
-Now you start the tasks by run:
+Then run the defined tasks from the command line:
+
 ```shell
-npx gulp ln:serve:up
-npx gulp ln:serve:down
+npx gulp serve:start
+npx gulp serve:stop
 ```
+
 
 ## Options
-The task accepts an parameter object with the following attributes:
 
- * **folder**: The path to the folder where the docker-compose files lies
- * **project**: The project name for docker to start. Every container will be prefixed with that project name.
+The two functions can be configured to use non-default options via `.with(options)`:
 
 ```javascript
-var gulp = require('gulp');
-var serve = require( 'lernetz-serve-gulp-task' )( { folder:"docker/folder", project:"name" } );
+module.exports = {
+    'serve:start': startServe.with(options),
+    'serve:stop': stopServe.with(options),
+};
 ```
 
-## Custom tasks
-If you like to register the tasks under another name simply us gulp.series like so:
-```javascript
-gulp.task( 'myName', gulp.series( 'ln:serve:up' );
-```
+The `options` object allows you to specify the following properties:
+
+ * `folder`: The path to the folder containing the `docker-compose.yml` file. The default is `'docker/dev'`.
+
+ * `name`: The project name to be used by `docker-compose`. Every container will be prefixed with that project name. By default, the name of the current directory will be used.

@@ -1,47 +1,55 @@
-var path = require('path');
-var gulp = require('gulp');
-var merge = require('merge');
-var cp = require('child_process');
+const cp = require('child_process');
+const path = require('path');
 
-var options = {
-	folder: 'docker/dev',
-	project: path.basename( process.cwd() )
+const defaultOptions = {
+    folder: 'docker/dev',
+    name: path.basename(process.cwd()),
+};
+
+function startServe(callback) {
+    startServe.with(defaultOptions)(callback);
 }
 
-gulp.task( 'ln:serve:up', ( done ) => {
+startServe.with = function(options) {
+    const project = { ...defaultOptions, ...options };
 
-	function parseOutput( error, stdout, stderr ) {
-		var regex = /0\.0\.0\.0:([0-9]*)->([0-9]*)\//g;
-		var matches = [];
-		var match = regex.exec( stdout );
+    return done => {
+        cp.execSync(`docker-compose --project-name "${project.name}" up -d`, { cwd: project.folder });
 
-		while (match != null) {
-			matches.push( match );
-			match = regex.exec( stdout );
-		}
-		console.log( '\n---' );
-		matches.forEach( ( match ) => {
-			console.log( "http://localhost:" + match[1] + " (" + match[2] + ")" );
-		});
-		console.log( '---' );
+        cp.exec(`docker-compose --project-name "${project.name}" ps`, { cwd: project.folder }, (error, stdout, stderr) => {
+            const regex = /0\.0\.0\.0:([0-9]*)->([0-9]*)\//g;
+            const matches = [];
+            let match;
+            while (match = regex.exec(stdout)) {
+                matches.push(match);
+            }
 
+            console.log('\n---');
+            for (const match of matches) {
+                console.log(`http://localhost:${match[1]} (${match[2]})`);
+            }
+            console.log('---');
 
-		done();
-	}
-
-	cp.execSync( 'docker-compose --project-name "' + options.project + '" up -d', { cwd:options.folder } );
-	cp.exec( 'docker-compose --project-name "' + options.project + '" ps', { cwd:options.folder }, parseOutput );
-});
-
-gulp.task( 'ln:serve:down', ( done ) => {
-	cp.execSync( 'docker-compose --project-name "' + options.project + '" down --remove-orphans -v', { cwd:options.folder } );
-	done();
-});
-
-
-function entry( changes ) {
-    options = merge( options, changes );
-    return gulp.series( 'ln:serve:up' );
+            done();
+        });
+    };
 }
 
-module.exports = entry;
+function stopServe(callback) {
+    stopServe.with(defaultOptions)(callback);
+}
+
+stopServe.with = function(options) {
+    const project = { ...defaultOptions, ...options };
+
+    return done => {
+        cp.execSync(`docker-compose --project-name "${project.name}" down --remove-orphans`, { cwd: project.folder });
+
+        done();
+    }
+}
+
+module.exports = {
+    startServe,
+    stopServe,
+};
